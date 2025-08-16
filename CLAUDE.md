@@ -15,10 +15,10 @@ This is an n8n automation repository containing workflow definitions and their d
 Example structure:
 ```
 /n8n-automation/
-├── Grokニュース取得.json
-├── Grokニュース取得.md
-├── Grok→Obsidian.json
-├── Grok→Obsidian.md
+├── grok-news-discord.json
+├── grok-news-discord.md
+├── grok-news-obsidian.json
+├── grok-news-obsidian.md
 └── CLAUDE.md
 ```
 
@@ -79,14 +79,14 @@ Avoid technical implementation details unless specifically requested. Documentat
 
 ## Current Workflows
 
-### Grokニュース取得
+### grok-news-discord
 - **Purpose**: Weekly AI news aggregation from X (Twitter)
 - **Schedule**: Every Saturday at 9 AM
 - **Output**: Discord notifications with curated AI news
 - **Key Features**: Filters by popularity (60+ likes), includes source URLs, auto-splits long messages
 - **Status**: Legacy workflow (Discord output)
 
-### Grok→Obsidian
+### grok-news-obsidian
 - **Purpose**: Weekly AI news aggregation from X (Twitter) with Obsidian knowledge management
 - **Schedule**: Every Saturday at 9 AM  
 - **Output**: Structured Markdown files in GitHub repository for Obsidian

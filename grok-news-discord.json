@@ -1,5 +1,5 @@
 {
-  "name": "Grokニュース→Obsidian",
+  "name": "Grok News Discord",
   "nodes": [
     {
       "parameters": {
@@ -168,10 +168,10 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "e8732121-eb4c-4847-ab0c-15dfc65ea429",
+  "versionId": "df450851-554f-433d-bf07-d631efcee43d",
   "meta": {
     "instanceId": "b6e990f210fa44870ca0bb1387222c6b940dbc8d2ab05eac96a53521aa849f5e"
   },
-  "id": "4XXOysAkYKtwviS3",
+  "id": "w7FXk1nh1cAPx0v4",
   "tags": []
 }

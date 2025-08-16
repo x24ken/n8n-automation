@@ -1,0 +1,177 @@
+{
+  "name": "Grokニュース→Obsidian",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                6
+              ],
+              "triggerAtHour": 9
+            },
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1168,
+        -144
+      ],
+      "id": "99b8f2f3-faa2-47d9-b47a-4d9636e5aa9d",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date();\nconst sixDaysAgo = new Date();\nsixDaysAgo.setDate(today.getDate() - 6);\n\nconst formatDate = (date) =>\ndate.toISOString().slice(0, 10);\n\nconst startDate = formatDate(sixDaysAgo);\nconst endDate = formatDate(today);\n\nconst prompt = `${startDate}〜${endDate}の週のAI活用ニュース、主には「新しいツールの登場、アップデート、具体的な活用方法」を集めてください。\n\n## ルール\n- 各ニュースの概要の末尾に元ポストのURLを書いてください\n- 「## 普段ウォッチしているアカウント」参考に似た系統の情報源からポストを集めてください\n\n## 普段ウォッチしているアカウント\nTestingCatalog News 🗞\n@testingcatalog\n\nAI Engineer\n@aiDotEngineer\n\nLangChain\n@LangChainAI\n\nHamel Husain\n@HamelHusain\n\nSam Altman\n@sama\n\nFirebase\n@Firebase\n\nGenspark (ジェンスパーク) : 日本公式\n@genspark_japan\n\nAnthropic\n@AnthropicAI\n\nChatGPT\n@ChatGPTapp\n\nn8n.io\n@n8n_io\n\nLatent.Space\n@latentspacepod\n`\n\nreturn [{ json: { prompt, startDate, endDate } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        -144
+      ],
+      "id": "d819f039-2379-418b-ad9d-cfb22bcc1ad3",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.x.ai/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "xAiApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "grok-4"
+            },
+            {
+              "name": "search_parameters",
+              "value": "={{ {   \"mode\": \"auto\",   \"from_date\": $json.startDate,   \"to_date\": $json.endDate,   \"max_search_results\": 30,   \"sources\": [{ \"type\": \"x\", \"post_favorite_count\": 60 }] } }}"
+            },
+            {
+              "name": "messages",
+              "value": "={{ [{ \"role\": \"user\", \"content\": $json.prompt }] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -752,
+        -144
+      ],
+      "id": "80259aec-040e-4b55-b432-b084319af054",
+      "name": "HTTP Request",
+      "credentials": {
+        "xAiApi": {
+          "id": "LW8POSgDNk4hQBrr",
+          "name": "xAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "create",
+        "owner": "={{ $json.githubOwner || 'your-username' }}",
+        "repository": "={{ $json.githubRepo || 'obsidian-ai-news' }}",
+        "filePath": "={{ $json.fileName }}",
+        "fileContent": "={{ $json.fileContent }}",
+        "commitMessage": "={{ $json.commitMessage }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        -48,
+        -144
+      ],
+      "id": "6117592b-0191-498b-b628-abea7f964719",
+      "name": "GitHub File Create",
+      "credentials": {
+        "githubApi": {
+          "id": "github-token-id",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const grokContent = $input.first().json.choices[0].message.content;\nconst today = new Date();\n\n// 週番号計算\nconst startOfYear = new Date(today.getFullYear(), 0, 1);\nconst pastDaysOfYear = (today - startOfYear) / 86400000;\nconst weekNumber = Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);\n\n// ファイル名生成\nconst fileName = `AI-News/${today.toISOString().slice(0, 10)}-ai-weekly.md`;\n\n// フロントマター\nconst frontMatter = `---\ndate: ${today.toISOString().slice(0, 10)}\ntype: ai-weekly-news\nsource: grok-api\nweek: ${today.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}\ntags: [ai, news, weekly, grok]\ncreated: \"${today.toISOString()}\"\nperiod: \"${$json.startDate} to ${$json.endDate}\"\n---`;\n\n// メインコンテンツ\nconst markdownContent = frontMatter + `\n\n# 📰 AI週刊ニュース - ${today.getFullYear()}年${(today.getMonth()+1).toString().padStart(2, '0')}月${today.getDate().toString().padStart(2, '0')}日\n\n## 📊 今週のサマリー\n- **収集期間**: ${$json.startDate} 〜 ${$json.endDate}\n- **フィルター**: 60いいね以上の人気投稿\n- **情報源**: [[Grok API]]による自動収集\n- **生成日時**: ${today.toLocaleString('ja-JP')}\n\n## 🤖 AI関連の注目ニュース\n\n${grokContent}\n\n## 🔗 関連リンク\n- [[AI-Tools]] - 新しいAIツール一覧\n- [[Weekly-Summary]] - 週次まとめ\n- [[Grok-Automation]] - 自動収集の仕組み\n\n## 🏷️ タグ\n#AI #週刊ニュース #${today.getFullYear()} #${(today.getMonth()+1).toString().padStart(2, '0')}月 #Grok #自動収集\n\n---\n*このレポートは[[n8n]]と[[Grok API]]により自動生成されました*\n`;\n\n// 出力データ\nreturn [{\n  json: {\n    fileName,\n    fileContent: markdownContent,\n    commitMessage: `Add AI weekly news - ${today.toISOString().slice(0, 10)}`,\n    // デバッグ用\n    weekNumber,\n    today: today.toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -512,
+        -144
+      ],
+      "id": "f816d59d-13b7-49e3-ae4f-e5445eafa12a",
+      "name": "Markdown Generator"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown Generator": {
+      "main": [
+        [
+          {
+            "node": "GitHub File Create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Markdown Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e8732121-eb4c-4847-ab0c-15dfc65ea429",
+  "meta": {
+    "instanceId": "b6e990f210fa44870ca0bb1387222c6b940dbc8d2ab05eac96a53521aa849f5e"
+  },
+  "id": "4XXOysAkYKtwviS3",
+  "tags": []
+}

@@ -84,7 +84,6 @@ Avoid technical implementation details unless specifically requested. Documentat
 - **Schedule**: Every Saturday at 9 AM
 - **Output**: Discord notifications with curated AI news
 - **Key Features**: Filters by popularity (60+ likes), includes source URLs, auto-splits long messages
-- **Status**: Legacy workflow (Discord output)
 
 ### grok-news-obsidian
 - **Purpose**: Weekly AI news aggregation from X (Twitter) with Obsidian knowledge management
@@ -92,4 +91,3 @@ Avoid technical implementation details unless specifically requested. Documentat
 - **Output**: Structured Markdown files in GitHub repository for Obsidian
 - **Key Features**: YAML frontmatter, internal links, tags, automatic file organization
 - **GitHub Integration**: Creates files in `AI-News/YYYY-MM-DD-ai-weekly.md` format
-- **Status**: Active workflow (Obsidian output)

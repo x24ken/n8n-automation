@@ -1,107 +1,107 @@
-# 🤖 n8n Automation Workflows
+# 🤖 n8n 自動化ワークフロー
 
-This repository contains n8n workflow automation for AI news collection and management systems.
+AIニュース収集・管理システム用のn8nワークフロー自動化を提供するリポジトリです。
 
-## 📋 Available Workflows
+## 📋 利用可能なワークフロー
 
 ### 📰 [Grok News Discord](./grok-news-discord.md)
-**Legacy Discord Notification System**
+**レガシーDiscord通知システム**
 
-- **Purpose**: Weekly AI news aggregation from X (Twitter) to Discord
-- **Schedule**: Every Saturday at 9 AM
-- **Output**: Discord notifications with curated AI news
-- **Status**: Legacy workflow
+- **目的**: X（Twitter）からの週次AIニュース収集とDiscord通知
+- **スケジュール**: 毎週土曜日の朝9時
+- **出力**: 厳選されたAIニュースのDiscord通知
+- **ステータス**: レガシーワークフロー
 
-[📄 View Requirements & Documentation →](./grok-news-discord.md)
+[📄 要件・ドキュメントを見る →](./grok-news-discord.md)
 
 ---
 
 ### 📚 [Grok News Obsidian](./grok-news-obsidian.md)
-**Knowledge Management System with Obsidian Integration**
+**Obsidian連携ナレッジマネジメントシステム**
 
-- **Purpose**: Weekly AI news aggregation with structured Obsidian knowledge management
-- **Schedule**: Every Saturday at 9 AM  
-- **Output**: Structured Markdown files in GitHub repository for Obsidian
-- **Features**: YAML frontmatter, internal links, tags, automatic file organization
-- **Status**: Active workflow
+- **目的**: 構造化されたObsidianナレッジマネジメントによる週次AIニュース収集
+- **スケジュール**: 毎週土曜日の朝9時
+- **出力**: ObsidianのためのGitHubリポジトリに保存される構造化Markdownファイル
+- **機能**: YAMLフロントマター、内部リンク、タグ、自動ファイル整理
+- **ステータス**: アクティブワークフロー
 
-[📄 View Requirements & Documentation →](./grok-news-obsidian.md)
+[📄 要件・ドキュメントを見る →](./grok-news-obsidian.md)
 
 ---
 
-## 🏗️ Repository Structure
+## 🏗️ リポジトリ構造
 
 ```
 n8n-automation/
-├── README.md                    # This file
-├── CLAUDE.md                    # Repository guidelines & development rules
-├── grok-news-discord.json       # Discord workflow definition
-├── grok-news-discord.md         # Discord workflow requirements
-├── grok-news-obsidian.json      # Obsidian workflow definition
-└── grok-news-obsidian.md        # Obsidian workflow requirements
+├── README.md                    # このファイル
+├── CLAUDE.md                    # リポジトリガイドライン・開発ルール
+├── grok-news-discord.json       # Discordワークフロー定義
+├── grok-news-discord.md         # Discordワークフロー要件
+├── grok-news-obsidian.json      # Obsidianワークフロー定義
+└── grok-news-obsidian.md        # Obsidianワークフロー要件
 ```
 
-## 🚀 Quick Start
+## 🚀 クイックスタート
 
-1. **Choose your workflow**:
-   - For simple Discord notifications → [grok-news-discord](./grok-news-discord.md)
-   - For advanced knowledge management → [grok-news-obsidian](./grok-news-obsidian.md)
+1. **ワークフローを選択**:
+   - シンプルなDiscord通知 → [grok-news-discord](./grok-news-discord.md)
+   - 高度なナレッジマネジメント → [grok-news-obsidian](./grok-news-obsidian.md)
 
-2. **Import to n8n**:
-   - Download the corresponding `.json` file
-   - Import to your n8n instance
-   - Configure credentials and settings
+2. **n8nにインポート**:
+   - 対応する`.json`ファイルをダウンロード
+   - n8nインスタンスにインポート
+   - 認証情報と設定を構成
 
-3. **Read requirements**:
-   - Each workflow has detailed documentation in its `.md` file
-   - Follow setup instructions and customization options
+3. **要件を確認**:
+   - 各ワークフローには`.md`ファイルに詳細なドキュメントがあります
+   - セットアップ手順とカスタマイズオプションに従ってください
 
-## 🔧 Technical Requirements
+## 🔧 技術要件
 
-### Common Requirements
-- **n8n instance** (self-hosted or cloud)
-- **xAI API Key** for Grok-4 access
-- **X (Twitter) API access** via Grok search
+### 共通要件
+- **n8nインスタンス**（セルフホストまたはクラウド）
+- **xAI API Key**（Grok-4アクセス用）
+- **X（Twitter）APIアクセス**（Grok検索経由）
 
-### Workflow-Specific Requirements
+### ワークフロー固有の要件
 
-| Feature | Discord Workflow | Obsidian Workflow |
-|---------|------------------|-------------------|
-| **Output** | Discord Webhook | GitHub Repository |
-| **Format** | Plain text (auto-split) | Structured Markdown |
-| **Storage** | Temporary | Permanent |
-| **Search** | None | Tags + Internal links |
-| **Management** | Manual | Automated with Obsidian |
+| 機能 | Discordワークフロー | Obsidianワークフロー |
+|------|---------------------|----------------------|
+| **出力** | Discord Webhook | GitHubリポジトリ |
+| **形式** | プレーンテキスト（自動分割） | 構造化Markdown |
+| **保存** | 一時的 | 永続的 |
+| **検索** | なし | タグ + 内部リンク |
+| **管理** | 手動 | Obsidianで自動化 |
 
-## 📚 Documentation
+## 📚 ドキュメント
 
-- **[CLAUDE.md](./CLAUDE.md)** - Development guidelines and repository rules
-- **[grok-news-discord.md](./grok-news-discord.md)** - Discord workflow documentation
-- **[grok-news-obsidian.md](./grok-news-obsidian.md)** - Obsidian workflow documentation
+- **[CLAUDE.md](./CLAUDE.md)** - 開発ガイドラインとリポジトリルール
+- **[grok-news-discord.md](./grok-news-discord.md)** - Discordワークフローのドキュメント
+- **[grok-news-obsidian.md](./grok-news-obsidian.md)** - Obsidianワークフローのドキュメント
 
-## 🔄 Workflow Comparison
+## 🔄 ワークフロー比較
 
-### Discord Workflow (Legacy)
+### Discordワークフロー（レガシー）
 ```mermaid
 graph LR
-    A[Saturday 9AM] --> B[Calculate Period]
-    B --> C[Grok-4 Search]
-    C --> D[Split 2000 chars]
-    D --> E[Discord Post]
+    A[土曜日9時] --> B[期間計算]
+    B --> C[Grok-4検索]
+    C --> D[2000文字分割]
+    D --> E[Discord投稿]
     
     style A fill:#ffd93d
     style C fill:#6bcf7f
     style E fill:#4a90e2
 ```
 
-### Obsidian Workflow (Active)
+### Obsidianワークフロー（アクティブ）
 ```mermaid
 graph LR
-    A[Saturday 9AM] --> B[Calculate Period]
-    B --> C[Grok-4 Search]
-    C --> D[Generate Markdown]
-    D --> E[GitHub Commit]
-    E --> F[Obsidian Sync]
+    A[土曜日9時] --> B[期間計算]
+    B --> C[Grok-4検索]
+    C --> D[Markdown生成]
+    D --> E[GitHubコミット]
+    E --> F[Obsidian同期]
     
     style A fill:#ffd93d
     style C fill:#6bcf7f
@@ -109,24 +109,24 @@ graph LR
     style F fill:#ff6b9d
 ```
 
-## 📈 Features Comparison
+## 📈 機能比較
 
-| Feature | Discord | Obsidian |
-|---------|---------|----------|
-| **Real-time notifications** | ✅ | ❌ |
-| **Long-term storage** | ❌ | ✅ |
-| **Search & organization** | ❌ | ✅ |
-| **Cross-referencing** | ❌ | ✅ |
-| **Data portability** | ❌ | ✅ |
-| **Setup complexity** | Low | Medium |
-| **Maintenance** | Low | Low |
+| 機能 | Discord | Obsidian |
+|------|---------|----------|
+| **リアルタイム通知** | ✅ | ❌ |
+| **長期保存** | ❌ | ✅ |
+| **検索・整理** | ❌ | ✅ |
+| **相互参照** | ❌ | ✅ |
+| **データ可搬性** | ❌ | ✅ |
+| **セットアップ複雑度** | 低 | 中 |
+| **メンテナンス** | 低 | 低 |
 
-## 🏷️ Tags
+## 🏷️ タグ
 
 `#n8n` `#automation` `#ai-news` `#grok` `#discord` `#obsidian` `#workflow` `#x-twitter`
 
 ---
 
-📝 **Note**: This repository follows specific development guidelines documented in [CLAUDE.md](./CLAUDE.md). Please review before contributing or modifying workflows.
+📝 **注意**: このリポジトリは[CLAUDE.md](./CLAUDE.md)に記載された特定の開発ガイドラインに従っています。ワークフローの貢献や修正の前にご確認ください。
 
-🤖 *Generated and maintained with [Claude Code](https://claude.ai/code)*
+🤖 *[Claude Code](https://claude.ai/code)で生成・保守されています*

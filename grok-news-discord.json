@@ -1,5 +1,5 @@
 {
-  "name": "Grok News Discord",
+  "name": "grok-news-discord",
   "nodes": [
     {
       "parameters": {
@@ -80,32 +80,43 @@
     },
     {
       "parameters": {
-        "resource": "file",
-        "operation": "create",
-        "owner": "={{ $json.githubOwner || 'your-username' }}",
-        "repository": "={{ $json.githubRepo || 'obsidian-ai-news' }}",
-        "filePath": "={{ $json.fileName }}",
-        "fileContent": "={{ $json.fileContent }}",
-        "commitMessage": "={{ $json.commitMessage }}"
+        "fieldToSplitOut": "chunks",
+        "options": {}
       },
-      "type": "n8n-nodes-base.github",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
       "position": [
         -48,
         -144
       ],
       "id": "6117592b-0191-498b-b628-abea7f964719",
-      "name": "GitHub File Create",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "={{ $json.chunks }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        160,
+        -144
+      ],
+      "id": "6a7b8d15-66ac-4aee-bf91-39bd4c14bb5d",
+      "name": "Discord",
+      "webhookId": "0f7f1f61-6406-4dfb-9927-88fffaf26c9a",
       "credentials": {
-        "githubApi": {
-          "id": "github-token-id",
-          "name": "GitHub Token"
+        "discordWebhookApi": {
+          "id": "GESVhDerfZa7lLky",
+          "name": "Discord Webhook account"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const grokContent = $input.first().json.choices[0].message.content;\nconst today = new Date();\n\n// 週番号計算\nconst startOfYear = new Date(today.getFullYear(), 0, 1);\nconst pastDaysOfYear = (today - startOfYear) / 86400000;\nconst weekNumber = Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);\n\n// ファイル名生成\nconst fileName = `AI-News/${today.toISOString().slice(0, 10)}-ai-weekly.md`;\n\n// フロントマター\nconst frontMatter = `---\ndate: ${today.toISOString().slice(0, 10)}\ntype: ai-weekly-news\nsource: grok-api\nweek: ${today.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}\ntags: [ai, news, weekly, grok]\ncreated: \"${today.toISOString()}\"\nperiod: \"${$json.startDate} to ${$json.endDate}\"\n---`;\n\n// メインコンテンツ\nconst markdownContent = frontMatter + `\n\n# 📰 AI週刊ニュース - ${today.getFullYear()}年${(today.getMonth()+1).toString().padStart(2, '0')}月${today.getDate().toString().padStart(2, '0')}日\n\n## 📊 今週のサマリー\n- **収集期間**: ${$json.startDate} 〜 ${$json.endDate}\n- **フィルター**: 60いいね以上の人気投稿\n- **情報源**: [[Grok API]]による自動収集\n- **生成日時**: ${today.toLocaleString('ja-JP')}\n\n## 🤖 AI関連の注目ニュース\n\n${grokContent}\n\n## 🔗 関連リンク\n- [[AI-Tools]] - 新しいAIツール一覧\n- [[Weekly-Summary]] - 週次まとめ\n- [[Grok-Automation]] - 自動収集の仕組み\n\n## 🏷️ タグ\n#AI #週刊ニュース #${today.getFullYear()} #${(today.getMonth()+1).toString().padStart(2, '0')}月 #Grok #自動収集\n\n---\n*このレポートは[[n8n]]と[[Grok API]]により自動生成されました*\n`;\n\n// 出力データ\nreturn [{\n  json: {\n    fileName,\n    fileContent: markdownContent,\n    commitMessage: `Add AI weekly news - ${today.toISOString().slice(0, 10)}`,\n    // デバッグ用\n    weekNumber,\n    today: today.toISOString()\n  }\n}];"
+        "jsCode": "const splitBy2000Characters = (text) => {\n  const chunkSize = 2000;\n  const result = [];\n\n  for (let i = 0; i < text.length; i += chunkSize) {\n    result.push(text.slice(i, i + chunkSize));\n  }\n\n  return result;\n}\n\nconst chunks = splitBy2000Characters($input.first().json.choices[0].message.content)\n\nreturn [{ json: { chunks } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -114,7 +125,7 @@
         -144
       ],
       "id": "f816d59d-13b7-49e3-ae4f-e5445eafa12a",
-      "name": "Markdown Generator"
+      "name": "Code1"
     }
   ],
   "pinData": {},
@@ -141,11 +152,22 @@
         ]
       ]
     },
-    "Markdown Generator": {
+    "Split Out": {
       "main": [
         [
           {
-            "node": "GitHub File Create",
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
             "type": "main",
             "index": 0
           }
@@ -156,7 +178,7 @@
       "main": [
         [
           {
-            "node": "Markdown Generator",
+            "node": "Code1",
             "type": "main",
             "index": 0
           }
